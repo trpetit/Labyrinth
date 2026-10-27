@@ -18,7 +18,7 @@ namespace Labyrinth.Crawl
         {
             get
             {
-                if (this.Y == 0)
+                if (this.Y == 0 || this.X == 0)
                 {
                     return Outside.Singleton;
                 }
