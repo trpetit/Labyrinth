@@ -21,9 +21,9 @@ namespace Labyrinth.Crawl
             throw new NotImplementedException();
         }
 
-        public Crawler()
+        public Crawler((int,int) startPosition)
         {
-            this.X = 2; this.Y = 1;
+            this.X = startPosition.Item1; this.Y = startPosition.Item2;
             this.Direction = Direction.North;
             this.FacingTile = Wall.Singleton;
         }
