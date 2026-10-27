@@ -18,7 +18,11 @@ namespace Labyrinth.Crawl
         {
             get
             {
-                return Outside.Singleton;
+                if (this.Y == 0)
+                {
+                    return Outside.Singleton;
+                }
+                return Wall.Singleton;
             }
         }
 
@@ -31,7 +35,7 @@ namespace Labyrinth.Crawl
         {
             this.X = startPosition.Item1; this.Y = startPosition.Item2;
             this.Direction = Direction.North;
-            
+            //this.FacingTile = Wall.Singleton;
         }
     }
 }
