@@ -58,7 +58,7 @@ public class LabyrinthCrawlerTest
         Assert.Throws<ArgumentException>(() => new Labyrinth.Labyrinth(parser));
     }
     #endregion
-
+     
     #region Labyrinth borders
     [Test]
     public void FacingNorthOnUpperTileReturnsOutside()
