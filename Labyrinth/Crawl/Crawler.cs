@@ -14,7 +14,13 @@ namespace Labyrinth.Crawl
 
         public Direction Direction { get; }
 
-        public Tile FacingTile { get; }
+        public Tile FacingTile
+        {
+            get
+            {
+                return Outside.Singleton;
+            }
+        }
 
         public Inventory Walk()
         {
@@ -25,7 +31,7 @@ namespace Labyrinth.Crawl
         {
             this.X = startPosition.Item1; this.Y = startPosition.Item2;
             this.Direction = Direction.North;
-            this.FacingTile = Wall.Singleton;
+            
         }
     }
 }
