@@ -51,7 +51,7 @@ public class LabyrinthCrawlerTest
         Assert.That(false);
     }
     #endregion
-
+     
     #region Labyrinth borders
     [Test]
     public void FacingNorthOnUpperTileReturnsOutside()
