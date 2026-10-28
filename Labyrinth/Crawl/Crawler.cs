@@ -8,9 +8,9 @@ namespace Labyrinth.Crawl
 {
     public class Crawler : ICrawler
     {
-        public int X { get;}
+        public int X { get; private set; }
 
-        public int Y { get; }
+        public int Y { get; private set; }
 
         private Labyrinth labyrinth;
 
@@ -42,7 +42,8 @@ public Tile FacingTile
 
         public Inventory Walk()
         {
-            throw new NotImplementedException();
+            this.Y--;
+            return new MyInventory();
         }
 
         public Crawler((int,int) startPosition)
