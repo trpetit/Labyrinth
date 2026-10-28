@@ -42,15 +42,15 @@ public Tile FacingTile
 
         public Inventory Walk()
         {
-            if (!this.FacingTile.IsTraversable)
-            {
-                throw new InvalidOperationException("Cannot walk into a non-traversable tile");
-            }
+            Tile taleFaced = this.FacingTile;
+            Inventory inventory = taleFaced.Pass();
+
             if (this.Direction == Direction.North) this.Y--;
             if (this.Direction == Direction.South) this.Y++;
             if (this.Direction == Direction.East) this.X++;
             if (this.Direction == Direction.West) this.X--;
-            return new MyInventory();
+
+            return inventory;
         }
 
         public Crawler((int,int) startPosition)
