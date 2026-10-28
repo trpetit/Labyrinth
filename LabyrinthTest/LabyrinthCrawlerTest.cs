@@ -192,7 +192,19 @@ public class LabyrinthCrawlerTest
     [Test]
     public void WalkOnNonTraversableTileThrowsInvalidOperationException()
     {
-        Assert.That(false);
+        // On place le point de départ collé au mur du haut
+        var parser = new AsciiParser("""
+        +---+
+        | x |
+        +---+
+        """);
+
+        var laby = new Labyrinth.Labyrinth(parser);
+        var crawler = laby.NewCrawler();
+
+        // Le Crawler regarde vers le Nord par défaut, il fait donc face au Wall.
+        // Essayer d'avancer doit déclencher une InvalidOperationException.
+        Assert.Throws<InvalidOperationException>(() => crawler.Walk());
     }
     #endregion
 
