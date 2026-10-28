@@ -159,6 +159,7 @@ public class LabyrinthCrawlerTest
         var inventory = crawler.Walk();
 
         Assert.That(inventory, Is.Not.Null); // On vérifie qu'un inventaire est bien retourné
+        Assert.That(inventory.HasItem, Is.False);
         Assert.That(crawler.X, Is.EqualTo(2));
         Assert.That(crawler.Y, Is.EqualTo(1)); // La position Y a diminué de 1 (marche vers le Nord)
         Assert.That(crawler.FacingTile, Is.TypeOf<Wall>()); // Il fait maintenant face au mur du haut
@@ -184,6 +185,7 @@ public class LabyrinthCrawlerTest
         var inventory = crawler.Walk();
 
         Assert.That(inventory, Is.Not.Null);
+        Assert.That(inventory.HasItem, Is.False);
         Assert.That(crawler.X, Is.EqualTo(2)); // La position X a augmenté de 1
         Assert.That(crawler.Y, Is.EqualTo(1));
         Assert.That(crawler.FacingTile, Is.TypeOf<Room>()); // Il fait face à la prochaine case vide en (3, 1)
@@ -209,10 +211,32 @@ public class LabyrinthCrawlerTest
     #endregion
 
     #region Items and doors
+ 
     [Test]
     public void WalkInARoomWithAnItem()
     {
-        Assert.That(false);
+        // On place un point de départ 'x' et un item 'k' (clé) juste à sa droite
+        var laby = new Labyrinth.Labyrinth(new AsciiParser("""
+                +---+
+                |xk |
+                |  /|
+                +---+
+                """));
+        var crawler = laby.NewCrawler();
+
+        // On tourne vers l'Est pour faire face à la clé
+        crawler.Direction.TurnRight();
+
+        // Le Crawler avance sur la case contenant l'item
+        var inventory = crawler.Walk();
+
+        using var all = Assert.EnterMultipleScope();
+        Assert.That(crawler.X, Is.EqualTo(2));
+        Assert.That(crawler.Y, Is.EqualTo(1));
+        // L'inventaire retourné ne doit pas être null et devrait logiquement contenir la clé ramassée
+        Assert.That(inventory, Is.Not.Null);
+        Assert.That(inventory.HasItem, Is.True);
+        Assert.That(crawler.FacingTile, Is.TypeOf<Room>());
     }
 
     [Test]
