@@ -16,6 +16,9 @@ namespace Labyrinth
         public Labyrinth(IBuilder builder)
         {
             _tiles = builder.Build(out _startPosition);
+
+            Width = _tiles.GetLength(0);
+            Height = _tiles.GetLength(1);
             if (_tiles.GetLength(0) < 3 || _tiles.GetLength(1) < 3)
             {
                 throw new ArgumentException("Labyrinth must be at least 3x3");
@@ -64,7 +67,7 @@ namespace Labyrinth
         }
 
         public ICrawler NewCrawler() {
-            return new Crawler(_startPosition);
+            return new Crawler(this,_startPosition);
         }
 
         private readonly Tile[,] _tiles;
