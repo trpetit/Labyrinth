@@ -16,20 +16,21 @@ namespace Labyrinth.Crawl
 
         public Direction Direction { get; }
 
-        public Tile FacingTile
+public Tile FacingTile
+{
+    get
+    {
+        if ((this.Y == 0 && this.Direction == Direction.North) ||
+            (this.X == 0 && this.Direction == Direction.West) ||
+            (this.X == this.labyrinth.Width - 1 && this.Direction == Direction.East) ||
+            (this.Y == this.labyrinth.Height - 1 && this.Direction == Direction.South))
         {
-            get
-            {
-                if ((this.Y == 0 && this.Direction == Direction.North) ||
-                    (this.X == 0 && this.Direction == Direction.West) ||
-                    (this.X == this.labyrinth.Width - 1 && this.Direction == Direction.East))
-                {
-                    return Outside.Singleton;
-                }
-
-                return Wall.Singleton;
-            }
+            return Outside.Singleton;
         }
+
+        return Wall.Singleton;
+    }
+}
 
         public Inventory Walk()
         {
