@@ -42,6 +42,10 @@ public Tile FacingTile
 
         public Inventory Walk()
         {
+            if (!this.FacingTile.IsTraversable)
+            {
+                throw new InvalidOperationException("Cannot walk into a non-traversable tile");
+            }
             if (this.Direction == Direction.North) this.Y--;
             if (this.Direction == Direction.South) this.Y++;
             if (this.Direction == Direction.East) this.X++;
