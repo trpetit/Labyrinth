@@ -167,7 +167,26 @@ public class LabyrinthCrawlerTest
     [Test]
     public void TurnAndWalkReturnsInventoryChangesPositionAndFacingTile()
     {
-        Assert.That(false);
+        // On place le point de départ complètement à gauche
+        var parser = new AsciiParser("""
+        +---+
+        |x  |
+        +---+
+        """);
+
+        var laby = new Labyrinth.Labyrinth(parser);
+        var crawler = laby.NewCrawler();
+
+        // Rotation vers l'Est (adapte l'appel selon ta logique exacte de rotation)
+        crawler.Direction.TurnRight();
+
+        // Initialement en (1, 1), il marche vers l'Est pour aller en (2, 1)
+        var inventory = crawler.Walk();
+
+        Assert.That(inventory, Is.Not.Null);
+        Assert.That(crawler.X, Is.EqualTo(2)); // La position X a augmenté de 1
+        Assert.That(crawler.Y, Is.EqualTo(1));
+        Assert.That(crawler.FacingTile, Is.TypeOf<Room>()); // Il fait face à la prochaine case vide en (3, 1)
     }
 
     [Test]
