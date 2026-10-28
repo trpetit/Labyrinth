@@ -143,7 +143,25 @@ public class LabyrinthCrawlerTest
     [Test]
     public void WalkReturnsInventoryAndChangesPositionAndFacingTile()
     {
-        Assert.That(false);
+        // On place le point de départ avec de l'espace au Nord
+        var parser = new AsciiParser("""
+        +---+
+        |   |
+        | x |
+        +---+
+        """);
+
+        var laby = new Labyrinth.Labyrinth(parser);
+        var crawler = laby.NewCrawler();
+
+        // Par défaut, le Crawler est en (2, 2) et regarde vers le Nord.
+        // La case au Nord (2, 1) est une Room. La case (2, 0) est un Wall (+).
+        var inventory = crawler.Walk();
+
+        Assert.That(inventory, Is.Not.Null); // On vérifie qu'un inventaire est bien retourné
+        Assert.That(crawler.X, Is.EqualTo(2));
+        Assert.That(crawler.Y, Is.EqualTo(1)); // La position Y a diminué de 1 (marche vers le Nord)
+        Assert.That(crawler.FacingTile, Is.TypeOf<Wall>()); // Il fait maintenant face au mur du haut
     }
 
     [Test]
