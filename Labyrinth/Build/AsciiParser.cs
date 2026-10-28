@@ -9,7 +9,9 @@ namespace Labyrinth.Build
     /// <param name="ascii_map">A multiline string with '+', '-' or '|' for walls, '/' for doors, 'k' for key locations and x for starting position.</param>
     public class AsciiParser(string ascii_map) : IBuilder
     {
-        public Tile[,] Build(out (int, int) startPosition)
+        public event EventHandler<StartEventArgs>? StartPositionFound;
+
+        public Tile[,] Build()
         {
             var lines = ascii_map.Split("\n,\r\n".Split(','), StringSplitOptions.None);
             var width = lines[0].Length;
@@ -17,7 +19,6 @@ namespace Labyrinth.Build
 
             using var km = new Keymaster();
 
-            startPosition = IBuilder.InvalidPosition;
             for (int y = 0; y < tiles.GetLength(1); y++)
             {
                 if (lines[y].Length != width)
@@ -26,24 +27,24 @@ namespace Labyrinth.Build
                 }
                 for (int x = 0; x < tiles.GetLength(0); x++)
                 {
-                    tiles[x, y] = lines[y][x] switch
+                    var character = lines[y][x];
+                    if (character == 'x')
                     {
-                        'x' => NewStartPos(x, y, out startPosition),
+                        StartPositionFound?.Invoke(this, new StartEventArgs(x, y));
+                    }
+
+                    tiles[x, y] = character switch
+                    {
+                        'x' => new Room(),
                         ' ' => new Room(),
                         '+' or '-' or '|' => Wall.Singleton,
                         '/' => km.NewDoor(),
                         'k' => km.NewKeyRoom(),
-                        _ => throw new ArgumentException($"Invalid map: unknown character '{lines[y][x]}' at line {y}, col {x}.")
+                        _ => throw new ArgumentException($"Invalid map: unknown character '{character}' at line {y}, col {x}.")
                     };
                 }
             }
             return tiles;
-        }
-
-        private Room NewStartPos(int x, int y, out (int, int) startPosition)
-        {
-            startPosition = (x, y);
-            return new Room();
         }
     }
 }

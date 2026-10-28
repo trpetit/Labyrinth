@@ -15,7 +15,18 @@ namespace Labyrinth
         /// <exception cref="NotSupportedException">Thrown for multiple doors (resp. key locations) before key locations (resp. doors).</exception>
         public Labyrinth(IBuilder builder)
         {
-            _tiles = builder.Build(out _startPosition);
+            (int, int)? startPosition = null;
+            EventHandler<StartEventArgs> onStartPositionFound = (_, args) =>
+                startPosition = (args.X, args.Y);
+            builder.StartPositionFound += onStartPositionFound;
+            try
+            {
+                _tiles = builder.Build();
+            }
+            finally
+            {
+                builder.StartPositionFound -= onStartPositionFound;
+            }
 
             Width = _tiles.GetLength(0);
             Height = _tiles.GetLength(1);
@@ -23,10 +34,12 @@ namespace Labyrinth
             {
                 throw new ArgumentException("Labyrinth must be at least 3x3");
             }
-            if (_startPosition == IBuilder.InvalidPosition)
+            if (startPosition is null)
             {
                 throw new ArgumentException("Labyrinth must have at least one starting position marked with x");
             }
+
+            _startPosition = startPosition.Value;
         }
 
         /// <summary>
@@ -72,10 +85,10 @@ namespace Labyrinth
         }
 
         public ICrawler NewCrawler() {
-            return new Crawler(this,_startPosition);
+            return new Crawler(this, _startPosition);
         }
 
         private readonly Tile[,] _tiles;
-        private (int, int) _startPosition;
+        private readonly (int, int) _startPosition;
     }
 }

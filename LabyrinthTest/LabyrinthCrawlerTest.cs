@@ -46,6 +46,23 @@ public class LabyrinthCrawlerTest
     }
 
     [Test]
+    public void ParserRaisesStartPositionFoundForEachX()
+    {
+        var parser = new AsciiParser("""
+                +---+
+                |x  |
+                |  x|
+                +---+
+                """);
+        var positions = new List<(int X, int Y)>();
+        parser.StartPositionFound += (_, args) => positions.Add((args.X, args.Y));
+
+        parser.Build();
+
+        Assert.That(positions, Is.EqualTo(new[] { (1, 1), (3, 2) }));
+    }
+
+    [Test]
     public void InitWithNoXThrowsArgumentException()
     {
         var parser = new AsciiParser("""
