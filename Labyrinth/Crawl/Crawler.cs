@@ -27,8 +27,16 @@ public Tile FacingTile
         {
             return Outside.Singleton;
         }
+                int targetX = this.X;
+                int targetY = this.Y;
 
-        return Wall.Singleton;
+                if (this.Direction == Direction.North) targetY--;
+                if (this.Direction == Direction.South) targetY++;
+                if (this.Direction == Direction.East) targetX++;
+                if (this.Direction == Direction.West) targetX--;
+                Tile taleFaced = this.labyrinth.GetTile(targetX,targetY);
+
+        return taleFaced;
     }
 }
 

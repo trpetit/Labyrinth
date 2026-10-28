@@ -66,6 +66,11 @@ namespace Labyrinth
             return res.ToString();
         }
 
+        public Tile GetTile(int x, int y)
+        {
+            return _tiles[x, y];
+        }
+
         public ICrawler NewCrawler() {
             return new Crawler(this,_startPosition);
         }
