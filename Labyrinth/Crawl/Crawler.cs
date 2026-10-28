@@ -20,14 +20,10 @@ namespace Labyrinth.Crawl
         {
             get
             {
-                if (this.Y == 0 && this.Direction.Equals(Direction.North))
+                if ((this.Y == 0 && this.Direction == Direction.North) ||
+                    (this.X == 0 && this.Direction == Direction.West) ||
+                    (this.X == this.labyrinth.Width - 1 && this.Direction == Direction.East))
                 {
-                    return Outside.Singleton;
-                }
-                if(this.X == 0 && this.Direction.Equals(Direction.West))
-                { return Outside.Singleton;
-                }
-                if( this.X == this.labyrinth.Width-1 && this.Direction.Equals(Direction.East)){
                     return Outside.Singleton;
                 }
 
