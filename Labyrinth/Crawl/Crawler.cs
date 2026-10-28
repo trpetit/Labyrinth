@@ -42,7 +42,10 @@ public Tile FacingTile
 
         public Inventory Walk()
         {
-            this.Y--;
+            if (this.Direction == Direction.North) this.Y--;
+            if (this.Direction == Direction.South) this.Y++;
+            if (this.Direction == Direction.East) this.X++;
+            if (this.Direction == Direction.West) this.X--;
             return new MyInventory();
         }
 
