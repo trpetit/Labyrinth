@@ -55,10 +55,34 @@ public class ExplorerTest
         Assert.That(crawler.Direction, Is.EqualTo(Direction.North));
     }
 
+    [Test]
+    public void GetOutRaisesDirectionChangedAndPositionChangedWithCurrentState()
+    {
+        var crawler = new TestCrawler();
+        var explorer = new Explorer(crawler, new SequenceRandom(0, 1, 2));
+        var directionChanges = new List<CrawlingEventArgs>();
+        var positionChanges = new List<CrawlingEventArgs>();
+        explorer.DirectionChanged += (_, args) => directionChanges.Add(args);
+        explorer.PositionChanged += (_, args) => positionChanges.Add(args);
+
+        explorer.GetOut(3);
+
+        using var all = Assert.EnterMultipleScope();
+        Assert.That(directionChanges, Has.Count.EqualTo(2));
+        Assert.That(directionChanges[0].Direction, Is.EqualTo(Direction.West));
+        Assert.That(directionChanges[0].X, Is.EqualTo(2));
+        Assert.That(directionChanges[0].Y, Is.EqualTo(3));
+        Assert.That(directionChanges[1].Direction, Is.EqualTo(Direction.North));
+        Assert.That(positionChanges, Has.Count.EqualTo(1));
+        Assert.That(positionChanges[0].X, Is.EqualTo(2));
+        Assert.That(positionChanges[0].Y, Is.EqualTo(2));
+        Assert.That(positionChanges[0].Direction, Is.EqualTo(Direction.North));
+    }
+
     private sealed class TestCrawler : ICrawler
     {
-        public int X => 0;
-        public int Y => 0;
+        public int X { get; private set; } = 2;
+        public int Y { get; private set; } = 3;
         public Direction Direction { get; } = Direction.North;
         public Tile FacingTile { get; set; } = new Room();
         public int WalkCount { get; private set; }
@@ -66,6 +90,8 @@ public class ExplorerTest
         public Inventory Walk()
         {
             WalkCount++;
+            X += Direction.DeltaX;
+            Y += Direction.DeltaY;
             FacingTile = Outside.Singleton;
             return new MyInventory();
         }

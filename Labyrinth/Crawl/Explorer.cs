@@ -14,6 +14,10 @@ namespace Labyrinth.Crawl
             this.random = random ?? Random.Shared;
         }
 
+        public event EventHandler<CrawlingEventArgs>? PositionChanged;
+
+        public event EventHandler<CrawlingEventArgs>? DirectionChanged;
+
         /// <summary>
         /// Performs up to <paramref name="n"/> random actions, stopping when an exit is found.
         /// </summary>
@@ -26,28 +30,44 @@ namespace Labyrinth.Crawl
                 switch (random.Next(3))
                 {
                     case 0:
-                        crawler.Direction.TurnLeft();
+                        TurnLeft();
                         break;
                     case 1:
-                        crawler.Direction.TurnRight();
+                        TurnRight();
                         break;
                     default:
                         if (crawler.FacingTile.IsTraversable)
                         {
                             crawler.Walk();
+                            PositionChanged?.Invoke(this, GetCurrentPosition());
                         }
                         else if (random.Next(2) == 0)
                         {
-                            crawler.Direction.TurnLeft();
+                            TurnLeft();
                         }
                         else
                         {
-                            crawler.Direction.TurnRight();
+                            TurnRight();
                         }
                         break;
                 }
             }
         }
+
+        private void TurnLeft()
+        {
+            crawler.Direction.TurnLeft();
+            DirectionChanged?.Invoke(this, GetCurrentPosition());
+        }
+
+        private void TurnRight()
+        {
+            crawler.Direction.TurnRight();
+            DirectionChanged?.Invoke(this, GetCurrentPosition());
+        }
+
+        private CrawlingEventArgs GetCurrentPosition() =>
+            new(crawler.X, crawler.Y, crawler.Direction);
 
         private readonly ICrawler crawler;
         private readonly Random random;
